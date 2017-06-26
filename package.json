@@ -1,6 +1,6 @@
 {
-  "name": "hero-js",
-  "version": "2.0.0",
+  "name": "mafia-js",
+  "version": "1.0.0",
   "description": "Components used in Web Implements Hero Components Interface",
   "main": "hero.js",
   "scripts": {
