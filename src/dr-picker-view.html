@@ -134,7 +134,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     },
     currentData:{},
     on:function(json){
-      console.log(json)
       if (json.show){
         this.currentData.name = '';
         this.currentData.value = [];
@@ -224,6 +223,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     //close pop
     closePop:function(){
       //初始化
+      var currentDataVauleLength = this.currentData.value.length;
+      for(var i = 0 ; i<currentDataVauleLength ; i++){
+        this.upperLevel()
+      }
       this.$.heroContent.style.display = 'none';
     },
     //back upper level
