@@ -149,12 +149,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       };
       if (json.values) {
         this.$.title.innerHTML = json.values.title;
-        let parent = document.getElementById('dataList');
         let el  ='';
         json.values.rows.forEach(function(element) {
            el += '<p class="dr-picker-view" data-value="'+element.value+'|'+ element.title +'">'+ element.title +'</p>'
         });
-        parent.innerHTML = el;
+        this.$.dataList.innerHTML = el;
       };
     },
     createP:function(value){
@@ -167,10 +166,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       let newCityList = cityList.find(function(item,index){
         return item.value == value;
       })
-      this.createDom(newCityList.rows);
-      localStorage.setItem( 'currentCityList',JSON.stringify(newCityList.rows));
-      this.$.location.innerHTML = title + ' > ';
-      this.$.title.innerHTML = '城市';
+      //香港 澳门 台湾单独处理
+      if(newCityList.rows.length){
+        this.createDom(newCityList.rows);
+        localStorage.setItem( 'currentCityList',JSON.stringify(newCityList.rows));
+        this.$.location.innerHTML = title + ' > ';
+        this.$.title.innerHTML = '城市';
+      }
+      else{
+        this.controller.on(this.currentData)
+        this.closePop();
+      }
     },
     createArea:function(value,title){
       let newAreaList = JSON.parse(localStorage.getItem('currentCityList')).find(function(item,index){
@@ -181,15 +187,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       this.$.title.innerHTML = '区域';
     },
     createDom:function(value){
-      let parent = document.getElementById('dataList');
-      parent.innerHTML = '';
+      this.$.dataList.innerHTML = '';
       let el  ='';
       value.forEach(function(element) {
          el += '<label class="dr-picker-view" data-value="'+element.value+'|'+ element.title +'">'+ element.title +'</label>'
       });
-      parent.innerHTML = el;
+      this.$.dataList.innerHTML = el;
     },
-    choice(event){
+    choice:function(event){
       let target = event.target;
       if(target.nodeName=='LABEL'){
         let dataValue = target.getAttribute('data-value').split('|');
