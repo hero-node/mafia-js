@@ -149,7 +149,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       };
       if (json.values) {
         this.$.title.innerHTML = json.values.title;
-        let el  ='';
+        var el  ='';
         json.values.rows.forEach(function(element) {
            el += '<p class="dr-picker-view" data-value="'+element.value+'|'+ element.title +'">'+ element.title +'</p>'
         });
@@ -162,8 +162,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       this.$.title.innerHTML = '省份';
     },
     createCity:function(value,title){
-      let cityList = this.cityList().rows;
-      let newCityList = cityList.find(function(item,index){
+      var cityList = this.cityList().rows;
+      var newCityList = cityList.find(function(item,index){
         return item.value == value;
       })
       //香港 澳门 台湾单独处理
@@ -179,7 +179,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       }
     },
     createArea:function(value,title){
-      let newAreaList = JSON.parse(localStorage.getItem('currentCityList')).find(function(item,index){
+      var newAreaList = JSON.parse(localStorage.getItem('currentCityList')).find(function(item,index){
         return item.value == value;
       })
       this.createDom(newAreaList.rows);
@@ -188,16 +188,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     },
     createDom:function(value){
       this.$.dataList.innerHTML = '';
-      let el  ='';
+      var el  ='';
       value.forEach(function(element) {
          el += '<label class="dr-picker-view" data-value="'+element.value+'|'+ element.title +'">'+ element.title +'</label>'
       });
       this.$.dataList.innerHTML = el;
     },
     choice:function(event){
-      let target = event.target;
+      var target = event.target;
       if(target.nodeName=='LABEL'){
-        let dataValue = target.getAttribute('data-value').split('|');
+        var dataValue = target.getAttribute('data-value').split('|');
         this.currentData.value.push({'value':dataValue[0],'title':dataValue[1]});
         if(dataValue[0].substr(2,4) === '0000'){
           this.createCity(dataValue[0],dataValue[1])
@@ -211,7 +211,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         }
       }
       else if(target.nodeName=='P'){
-        let dataValue = target.getAttribute('data-value').split('|');
+        var dataValue = target.getAttribute('data-value').split('|');
         if(dataValue[0] == 'undefined'){
           dataValue[0] = '';
         }
@@ -239,7 +239,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         this.$.title.innerHTML ='城市';
       }
       else if(this.$.title.innerHTML == '城市'){
-        let upperPList = JSON.parse(localStorage.getItem('currentPList'));
+        var upperPList = JSON.parse(localStorage.getItem('currentPList'));
         this.createDom(upperPList);
         this.$.title.innerHTML ='省份';
         this.$.location.innerHTML ='';
