@@ -149,12 +149,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       };
       if (json.values) {
         this.$.title.innerHTML = json.values.title;
-        let parent = document.getElementById('dataList');
-        let el  ='';
+        var el  ='';
         json.values.rows.forEach(function(element) {
            el += '<p class="dr-picker-view" data-value="'+element.value+'|'+ element.title +'">'+ element.title +'</p>'
         });
-        parent.innerHTML = el;
+        this.$.dataList.innerHTML = el;
       };
     },
     createP:function(value){
@@ -163,17 +162,24 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       this.$.title.innerHTML = '省份';
     },
     createCity:function(value,title){
-      let cityList = this.cityList().rows;
-      let newCityList = cityList.find(function(item,index){
+      var cityList = this.cityList().rows;
+      var newCityList = cityList.find(function(item,index){
         return item.value == value;
       })
-      this.createDom(newCityList.rows);
-      localStorage.setItem( 'currentCityList',JSON.stringify(newCityList.rows));
-      this.$.location.innerHTML = title + ' > ';
-      this.$.title.innerHTML = '城市';
+      //香港 澳门 台湾单独处理
+      if(newCityList.rows.length){
+        this.createDom(newCityList.rows);
+        localStorage.setItem( 'currentCityList',JSON.stringify(newCityList.rows));
+        this.$.location.innerHTML = title + ' > ';
+        this.$.title.innerHTML = '城市';
+      }
+      else{
+        this.controller.on(this.currentData)
+        this.closePop();
+      }
     },
     createArea:function(value,title){
-      let newAreaList = JSON.parse(localStorage.getItem('currentCityList')).find(function(item,index){
+      var newAreaList = JSON.parse(localStorage.getItem('currentCityList')).find(function(item,index){
         return item.value == value;
       })
       this.createDom(newAreaList.rows);
@@ -181,18 +187,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       this.$.title.innerHTML = '区域';
     },
     createDom:function(value){
-      let parent = document.getElementById('dataList');
-      parent.innerHTML = '';
-      let el  ='';
+      this.$.dataList.innerHTML = '';
+      var el  ='';
       value.forEach(function(element) {
          el += '<label class="dr-picker-view" data-value="'+element.value+'|'+ element.title +'">'+ element.title +'</label>'
       });
-      parent.innerHTML = el;
+      this.$.dataList.innerHTML = el;
     },
-    choice(event){
-      let target = event.target;
+    choice:function(event){
+      var target = event.target;
       if(target.nodeName=='LABEL'){
-        let dataValue = target.getAttribute('data-value').split('|');
+        var dataValue = target.getAttribute('data-value').split('|');
         this.currentData.value.push({'value':dataValue[0],'title':dataValue[1]});
         if(dataValue[0].substr(2,4) === '0000'){
           this.createCity(dataValue[0],dataValue[1])
@@ -206,7 +211,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         }
       }
       else if(target.nodeName=='P'){
-        let dataValue = target.getAttribute('data-value').split('|');
+        var dataValue = target.getAttribute('data-value').split('|');
         if(dataValue[0] == 'undefined'){
           dataValue[0] = '';
         }
@@ -218,10 +223,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     //close pop
     closePop:function(){
       //初始化
-      let upperPList = JSON.parse(localStorage.getItem('currentPList'));
-      this.createDom(upperPList);
-      this.$.title.innerHTML ='省份';
-      this.$.location.innerHTML ='';
+      var currentDataVauleLength = this.currentData.value.length;
+      for(var i = 0 ; i<currentDataVauleLength ; i++){
+        this.upperLevel()
+      }
       this.$.heroContent.style.display = 'none';
     },
     //back upper level
@@ -234,7 +239,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         this.$.title.innerHTML ='城市';
       }
       else if(this.$.title.innerHTML == '城市'){
-        let upperPList = JSON.parse(localStorage.getItem('currentPList'));
+        var upperPList = JSON.parse(localStorage.getItem('currentPList'));
         this.createDom(upperPList);
         this.$.title.innerHTML ='省份';
         this.$.location.innerHTML ='';

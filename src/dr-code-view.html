@@ -143,6 +143,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         if (!this.labels) {
           return;
         };
+        if(text.length>this.labels.length)
+        {
+          text=text.substr(0,this.labels.length);
+          this.text=text;
+        }
         for (var i = 0; i < this.labels.length; i++) {
           var label = this.labels[i];
           if (i < text.length) {
